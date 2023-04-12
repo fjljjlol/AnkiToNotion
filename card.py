@@ -34,7 +34,7 @@ class Card:
             self.extra = self.extra[:start] + replace + self.extra[end:]
 
     # Returns list of clozures. Optionally removes them from self.text and replaces them with a string
-    def get_clozures(self, remove:bool = False, replace:str = "") -> []:
+    def get_clozures(self, remove: bool = False, replace: str = "") -> []:
         starting_indices = self.starting_index_of_substr("`{{")
         closing_indices = self.starting_index_of_substr("}}`")
         closing_indices = [i + 3 for i in closing_indices]
@@ -54,18 +54,18 @@ class Card:
         for clozure in clozures:
             if "**" in clozure.text:
                 clozure.text = clozure.text.replace("**", "")
-                clozure.text = "**"+clozure.text +"**"
+                clozure.text = "**" + clozure.text + "**"
 
             if "<b>" in clozure.text:
                 clozure.text = clozure.text.replace("<b>", "")
                 clozure.text = clozure.text.replace("</b>", "")
                 clozure.text = "**" + clozure.text + "**"
 
-            if "</i>" in clozure.text and not "<i>" in clozure.text:
+            if "</i>" in clozure.text and "<i>" not in clozure.text:
                 clozure.text = clozure.text.replace("</i>", "")
                 clozure.text = clozure.text + "</i>"
 
-            if "</b>" in clozure.text and not "<b>" in clozure.text:
+            if "</b>" in clozure.text and "<b>" not in clozure.text:
                 clozure.text = clozure.text.replace("</b>", "")
                 clozure.text = clozure.text + "</b>"
 
@@ -73,6 +73,7 @@ class Card:
             self.text = self.text.replace("cumclozuregoesherelol", cloz.text, 1)
 
         print(self.text)
+
 
 def get_cards(file: str) -> []:
     cards = []
