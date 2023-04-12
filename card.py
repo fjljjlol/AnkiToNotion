@@ -54,12 +54,12 @@ class Card:
         for clozure in clozures:
             if "**" in clozure.text:
                 clozure.text = clozure.text.replace("**", "")
-                clozure.text = "**" + clozure.text + "**"
+                clozure.text = "<b>" + clozure.text + "</b>"
 
             if "<b>" in clozure.text:
                 clozure.text = clozure.text.replace("<b>", "")
                 clozure.text = clozure.text.replace("</b>", "")
-                clozure.text = "**" + clozure.text + "**"
+                clozure.text = "<b>" + clozure.text + "</b>"
 
             if "</i>" in clozure.text and "<i>" not in clozure.text:
                 clozure.text = clozure.text.replace("</i>", "")
