@@ -96,7 +96,10 @@ for card in cards:
             card.extra = "Extra <br>" + card.extra
 
     card.extra = "<div>" + card.extra + "</div>"
-    card.extra = card.extra.replace("img src=\"", "img src=\"" + config['images_dir'])
+    if not config['debug']:
+        card.extra = card.extra.replace("img src=\"", "img src=\"" + config['images_dir'])
+    else:
+        card.extra = card.extra.replace("img src=\"","")
     res = [i for i in range(len(card.extra)) if card.extra.startswith("src=", i)]
     spans = [i for i in range(len(card.extra)) if card.extra.startswith("<span", i)]
 

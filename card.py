@@ -56,6 +56,19 @@ class Card:
                 clozure.text = clozure.text.replace("**", "")
                 clozure.text = "**"+clozure.text +"**"
 
+            if "<b>" in clozure.text:
+                clozure.text = clozure.text.replace("<b>", "")
+                clozure.text = clozure.text.replace("</b>", "")
+                clozure.text = "**" + clozure.text + "**"
+
+            if "</i>" in clozure.text and not "<i>" in clozure.text:
+                clozure.text = clozure.text.replace("</i>", "")
+                clozure.text = clozure.text + "</i>"
+
+            if "</b>" in clozure.text and not "<b>" in clozure.text:
+                clozure.text = clozure.text.replace("</b>", "")
+                clozure.text = clozure.text + "</b>"
+
         for cloz in reversed(clozures):
             self.text = self.text.replace("cumclozuregoesherelol", cloz.text, 1)
 

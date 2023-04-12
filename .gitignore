@@ -151,3 +151,8 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 user.py
+.idea/vcs.xml
+.idea/AnkiToNotion.iml
+.idea/misc.xml
+.idea/misc.xml
+.idea/AnkiToNotion.iml

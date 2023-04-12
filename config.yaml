@@ -3,8 +3,10 @@ nikhil:
   images_dir: "/Users/nikhil/Documents/Code/AnkeyDir/Images"
   tsv: "/Users/nikhil/Documents/Code/AnkeyDir/elpepe.txt"
   out_dir: "/Users/nikhil/Documents/Code/AnkeyDir/aanking.docx"
+  debug: True
 
 mikey:
   images_dir: "/Users/michaelroth/AnkingImages/"
   tsv: "/Users/michaelroth/Downloads/elpepe.txt"
   out_dir: "/Users/michaelroth/Downloads/aanking.docx"
+  debug: False
