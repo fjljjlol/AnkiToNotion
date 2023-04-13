@@ -72,8 +72,6 @@ class Card:
         for cloz in reversed(clozures):
             self.text = self.text.replace("cumclozuregoesherelol", cloz.text, 1)
 
-        print(self.text)
-
 
 def get_cards(file: str) -> []:
     cards = []
