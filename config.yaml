@@ -3,6 +3,7 @@ nikhil:
   images_dir: "/Users/nikhil/Documents/Code/AnkeyDir/Images/"
   tsv: "/Users/nikhil/Documents/Code/AnkeyDir/elpepe.txt"
   out_dir: "/Users/nikhil/Documents/Code/AnkeyDir/aanking.docx"
+  default_img: "/Users/nikhil/Documents/Code/AnkeyDir/def.jpg"
   debug: True
   block_print: False
 

@@ -98,7 +98,9 @@ for card in cards:
     if not config['debug']:
         card.extra = card.extra.replace("img src=\"", "img src=\"" + config['images_dir'])
     else:
-        card.extra = card.extra.replace("img src=\"","")
+        # card.extra = card.extra.replace("img src=\"","")
+        card.extra = card.extra.replace("img src=\"", "img src=\"" + config['images_dir'])
+        card.get_images(config['default_img'])
     res = [i for i in range(len(card.extra)) if card.extra.startswith("src=", i)]
     spans = [i for i in range(len(card.extra)) if card.extra.startswith("<span", i)]
 
@@ -153,8 +155,8 @@ for card in cards:
     # print(card.extra)
     # break;
 
-    print(card.text)
-    print(card.extra)
+    # print(card.text)
+    # print(card.extra)
     # print()
 
 

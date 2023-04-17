@@ -1,5 +1,7 @@
 import csv
 from enum import Enum
+import os
+import shutil
 
 
 class TextType(Enum):
@@ -23,8 +25,11 @@ class Card:
         self.text = text
         self.extra = extra
 
-    def starting_index_of_substr(self, substr: str) -> []:
-        return [i for i in range(len(self.text)) if self.text.startswith(substr, i)]
+    def starting_index_of_substr(self, substr: str, type: TextType) -> []:
+        if type == TextType.TEXT:
+            return [i for i in range(len(self.text)) if self.text.startswith(substr, i)]
+        else:
+            return [i for i in range(len(self.extra)) if self.extra.startswith(substr, i)]
 
     # Removes start-end inclusive from self.text
     def remove_range(self, start: int, end: int, text_type: TextType, replace: str = ""):
@@ -35,8 +40,8 @@ class Card:
 
     # Returns list of clozures. Optionally removes them from self.text and replaces them with a string
     def get_clozures(self, remove: bool = False, replace: str = "") -> []:
-        starting_indices = self.starting_index_of_substr("`{{")
-        closing_indices = self.starting_index_of_substr("}}`")
+        starting_indices = self.starting_index_of_substr("`{{", TextType.TEXT)
+        closing_indices = self.starting_index_of_substr("}}`", TextType.TEXT)
         closing_indices = [i + 3 for i in closing_indices]
 
         clozures = []
@@ -47,6 +52,21 @@ class Card:
                 self.remove_range(start, end, TextType.TEXT, replace)
 
         return clozures
+
+    def get_images(self, default: str):
+        indices = self.starting_index_of_substr("src=", TextType.EXTRA)
+
+        images = []
+
+        for i in indices:
+            rest = self.extra[i + 5:]
+            images.append(rest[:rest.index("\"")])
+
+        for i in images:
+            exists = os.path.isfile(i)
+
+            if not exists:
+                shutil.copy(default, i)
 
     def do_extra_special(self):
         self.extra = self.extra.replace("<div style=\"font-weight: bold; \">", "")
