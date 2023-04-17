@@ -53,6 +53,7 @@ class Card:
 
         return clozures
 
+    # creates images if they do not exist. Does this by copying the image passed in.
     def get_images(self, default: str):
         indices = self.starting_index_of_substr("src=", TextType.EXTRA)
 
