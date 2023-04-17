@@ -2,9 +2,14 @@ import pypandoc
 from card import *
 from user import *
 import yaml
+import sys
+import os
 
 with open("config.yaml") as f:
     config = yaml.load(f, Loader=yaml.FullLoader)[user]
+
+if config["block_print"]:
+    sys.stdout = open(os.devnull, 'w')
 
 cards = get_cards(config['tsv'])
 

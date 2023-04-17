@@ -4,9 +4,11 @@ nikhil:
   tsv: "/Users/nikhil/Documents/Code/AnkeyDir/elpepe.txt"
   out_dir: "/Users/nikhil/Documents/Code/AnkeyDir/aanking.docx"
   debug: True
+  block_print: False
 
 mikey:
   images_dir: "/Users/michaelroth/AnkingImages/"
   tsv: "/Users/michaelroth/Downloads/elpepe.txt"
   out_dir: "/Users/michaelroth/Downloads/aanking.docx"
   debug: False
+  block_print: True
