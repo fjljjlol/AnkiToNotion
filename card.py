@@ -48,6 +48,12 @@ class Card:
 
         return clozures
 
+    def do_extra_special(self):
+        self.extra = self.extra.replace("<div style=\"font-weight: bold; \">", "")
+
+    def do_special(self):
+        self.text = self.text.replace("<div style=\"centerbox\"><div class=\"mnemonics\">", "")
+
     def clozure_bolding(self):
         clozures = self.get_clozures(True, "cumclozuregoesherelol")
 

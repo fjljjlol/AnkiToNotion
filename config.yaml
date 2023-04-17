@@ -1,6 +1,6 @@
 ---
 nikhil:
-  images_dir: "/Users/nikhil/Documents/Code/AnkeyDir/Images"
+  images_dir: "/Users/nikhil/Documents/Code/AnkeyDir/Images/"
   tsv: "/Users/nikhil/Documents/Code/AnkeyDir/elpepe.txt"
   out_dir: "/Users/nikhil/Documents/Code/AnkeyDir/aanking.docx"
   debug: True

@@ -23,7 +23,7 @@ for card in cards:
     card.text = card.text.replace("{{", "`{{")
     card.text = card.text.replace("}}", "}}`")
 
-    card.text = card.text.replace("<div style=\"centerbox\"><div class=\"mnemonics\">", "")
+    card.do_special()
 
     #TODO do the same thing to card.exta
     divs = len([i for i in range(len(card.text)) if card.text.startswith("<div", i)])
@@ -45,12 +45,6 @@ for card in cards:
 
 
 
-
-    #print(card.text)
-
-    # print(card.text)
-    # print(card.extra)
-    # print()
 
 # used to ensure first always has extra text
 isFirst = True
@@ -131,7 +125,7 @@ for card in cards:
         card.extra = p1 + p2
         card.extra = card.extra.replace("michaelferrara", "")
 
-
+    card.do_extra_special()
 
     # images = []
     # notfound = []
@@ -154,9 +148,11 @@ for card in cards:
     # print(card.extra)
     # break;
 
-    # print(card.text)
-    # print(card.extra)
+    print(card.text)
+    print(card.extra)
     # print()
+
+
 
 out = open("outhtml.html", "w")
 out.write("<ul>")
