@@ -24,6 +24,7 @@ for card in cards:
         card.text = card.text[:-1]
     card.text = card.text.replace("<div>", "")
     card.text = card.text.replace("</div>", "")
+
     card.text = "<div>" + card.text + "</div>"
     card.text = card.text.replace("{{", "`{{")
     card.text = card.text.replace("}}", "}}`")
@@ -83,7 +84,8 @@ for card in cards:
     clone = clone.replace("<br>", "")
     clone = clone.replace("<i>", "")
     clone = clone.replace("</i>", "")
-    if clone[0:4] == "<img" or clone[0:4] == "<br " or clone[0:4]==" <im":
+
+    if clone[0:4] == "<img" or clone[0:4] == "<br " or clone[0:4]==" <im" or clone[0:3]=="<b>" or clone[0:3]=="<u>":
         clone = clone[clone.find(">") + 1:]
         # if everything breaks, the bug is here (because img text img and the loop bellow will corrupt everything)
 
@@ -91,6 +93,11 @@ for card in cards:
             clone = clone[clone.find(">") + 1:]
 
         clone = clone.replace(" ", "")
+        clone = clone.replace("<b>", "")
+        clone = clone.replace("</b>", "")
+        # clone = clone.replace("<u></u></i><i><u></u></i><i><u></u></i><i></i><i></i><i></i><i></i><i>", "")
+        # clone = clone.replace("</i>", "")
+
         if len(clone) == 0:
             card.extra = "Extra <br>" + card.extra
 
@@ -155,9 +162,9 @@ for card in cards:
     # print(card.extra)
     # break;
 
-    # print(card.text)
-    # print(card.extra)
-    # print()
+    print(card.text)
+    print(card.extra)
+    print()
 
 
 

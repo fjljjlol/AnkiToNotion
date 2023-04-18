@@ -7,6 +7,7 @@ import shutil
 class TextType(Enum):
     TEXT = 1
     EXTRA = 2
+    ALL = 3
 
 
 class Clozure:
@@ -25,8 +26,15 @@ class Card:
         self.text = text
         self.extra = extra
 
-    def starting_index_of_substr(self, substr: str, type: TextType) -> []:
-        if type == TextType.TEXT:
+    def replace(self, text: str, repl: str = "", ttype: TextType = TextType.ALL):
+        if ttype == TextType.ALL or ttype == TextType.TEXT:
+            self.text = self.text.replace(text, repl)
+
+        if ttype == TextType.ALL or ttype == TextType.EXTRA:
+            self.extra = self.extra.replace(text, repl)
+
+    def starting_index_of_substr(self, substr: str, ttype: TextType) -> []:
+        if ttype == TextType.TEXT:
             return [i for i in range(len(self.text)) if self.text.startswith(substr, i)]
         else:
             return [i for i in range(len(self.extra)) if self.extra.startswith(substr, i)]
