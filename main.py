@@ -95,8 +95,7 @@ for card in cards:
         clone = clone.replace(" ", "")
         clone = clone.replace("<b>", "")
         clone = clone.replace("</b>", "")
-        # clone = clone.replace("<u></u></i><i><u></u></i><i><u></u></i><i></i><i></i><i></i><i></i><i>", "")
-        # clone = clone.replace("</i>", "")
+        clone = clone.replace("</span>", "")
 
         if len(clone) == 0:
             card.extra = "Extra <br>" + card.extra
