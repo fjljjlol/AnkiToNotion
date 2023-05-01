@@ -13,3 +13,7 @@ mikey:
   out_dir: "/Users/michaelroth/Downloads/aanking.docx"
   debug: False
   block_print: True
+
+card:
+  optionals:
+    - 'First Aid'

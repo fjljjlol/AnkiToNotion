@@ -6,58 +6,45 @@ import sys
 import os
 
 with open("config.yaml") as f:
-    config = yaml.load(f, Loader=yaml.FullLoader)[user]
+    conf = yaml.load(f, Loader=yaml.FullLoader)
+    user_config = conf[user]
+    card_config = conf['card']
 
-if config["block_print"]:
+if user_config["block_print"]:
     sys.stdout = open(os.devnull, 'w')
 
-cards = get_cards(config['tsv'])
+cards = get_cards(user_config['tsv'], card_config['optionals'])
 
+# used to ensure first always has extra text
+isFirst = True
 
 # 1 cleanse the text
 # print("Cleansing Text")
 for card in cards:
-    card.text = card.text.replace("\"\"", "\"")
-    if card.text[0] == "\"":
-        card.text = card.text[1:]
-    if card.text[~0] == "\"":
-        card.text = card.text[:-1]
-    card.text = card.text.replace("<div>", "")
-    card.text = card.text.replace("</div>", "")
+    card.initial_pruning()
 
+    # ----------------Text Pruning----------------
+    #Clozure pruning
     card.text = "<div>" + card.text + "</div>"
     card.text = card.text.replace("{{", "`{{")
     card.text = card.text.replace("}}", "}}`")
 
-    card.do_special()
+    card.do_text_special()
 
-    #TODO do the same thing to card.exta
+    #TODO do the same thing to card.extra
     divs = len([i for i in range(len(card.text)) if card.text.startswith("<div", i)])
     closedivs = len([i for i in range(len(card.text)) if card.text.startswith("</div", i)])
     for i in range(0, divs-closedivs):
         card.text+="</div>"
 
-    # divs = [i for i in range(len(card.text)) if card.text.startswith("<div", i)]
-    # break tag after div tag deletion
-    # for div in divs:
-    #     close = card.text.find(">", div) + 1
-    #
-    #     if(card.text[close:close+4]=="<br>"):
-    #         card.text = card.text[:close] + card.text[close+4:]
-
-    #Cloze cleansing
+    #clozure bolding
     card.clozure_bolding()
 
+    # only image checking
+    card.perform_only_image_detection(TextType.TEXT)
 
-
-
-
-# used to ensure first always has extra text
-isFirst = True
-
-# print("Cleansing Extras")
-for card in cards:
-    if(isFirst):
+    #----------------Extra Pruning----------------
+    if isFirst:
         clone = card.extra
         clone = clone.replace("<br>", "")
         clone = clone.replace("<div>", "")
@@ -67,46 +54,25 @@ for card in cards:
         isFirst = False
 
 
-    if (card.extra == ""):
+    if card.extra == "":
         continue
 
-    card.extra = card.extra.replace("\"\"", "\"")
-    if card.extra[0] == "\"":
-        card.extra = card.extra[1:]
-    if card.extra[~0] == "\"":
-        card.extra = card.extra[:-1]
-    card.extra = card.extra.replace("<div>", "")
-    card.extra = card.extra.replace("</div>", "")
-
     # only image checking
-    clone = card.extra
-    clone = clone.replace("<br />", "")
-    clone = clone.replace("<br>", "")
-    clone = clone.replace("<i>", "")
-    clone = clone.replace("</i>", "")
-
-    if clone[0:4] == "<img" or clone[0:4] == "<br " or clone[0:4]==" <im" or clone[0:3]=="<b>" or clone[0:3]=="<u>":
-        clone = clone[clone.find(">") + 1:]
-        # if everything breaks, the bug is here (because img text img and the loop bellow will corrupt everything)
-
-        while clone.find("<img") != -1:
-            clone = clone[clone.find(">") + 1:]
-
-        clone = clone.replace(" ", "")
-        clone = clone.replace("<b>", "")
-        clone = clone.replace("</b>", "")
-        clone = clone.replace("</span>", "")
-
-        if len(clone) == 0:
-            card.extra = "Extra <br>" + card.extra
+    card.perform_only_image_detection(TextType.EXTRA)
 
     card.extra = "<div>" + card.extra + "</div>"
-    if not config['debug']:
-        card.extra = card.extra.replace("img src=\"", "img src=\"" + config['images_dir'])
-    else:
-        # card.extra = card.extra.replace("img src=\"","")
-        card.extra = card.extra.replace("img src=\"", "img src=\"" + config['images_dir'])
-        card.get_images(config['default_img'])
+
+    #Images handling
+    card.extra = card.extra.replace("img src=\"", "img src=\"" + user_config['images_dir'])
+    if user_config['debug']:
+        card.get_images(user_config['default_img'])
+
+    # if not user_config['debug']:
+    #     card.extra = card.extra.replace("img src=\"", "img src=\"" + user_config['images_dir'])
+    # else:
+    #     # card.extra = card.extra.replace("img src=\"","")
+    #     card.extra = card.extra.replace("img src=\"", "img src=\"" + user_config['images_dir'])
+    #     card.get_images(user_config['default_img'])
     res = [i for i in range(len(card.extra)) if card.extra.startswith("src=", i)]
     spans = [i for i in range(len(card.extra)) if card.extra.startswith("<span", i)]
 
@@ -119,8 +85,6 @@ for card in cards:
             card.extra = p1 + p2
             break
         spans = [i for i in range(len(card.extra)) if card.extra.startswith("<span", i)]
-
-    # card.extra = card.extra.replace("<b style=\"font-style: italic; \">", "<b>")
 
     card.extra = card.extra.replace(" \"<", " &quot;<")
 
@@ -140,29 +104,19 @@ for card in cards:
 
     card.do_extra_special()
 
-    # images = []
-    # notfound = []
-    #
-    # for r in res:
-    #     img = ""
-    #     for char in card.extra[r+5:]:
-    #         if char=="\"":
-    #             images.append(img)
-    #             break
-    #         img+=char
-    #
-    # for i in images:
-    #     # print(i)
-    #     exists = os.path.isfile(i)
-    #     # print(exists)
-    #
-    # # print(images)
 
-    # print(card.extra)
-    # break;
+    # ----------------Extra Pruning----------------
+    # only image checking
+    card.perform_only_image_detection(TextType.OPTIONAL)
 
-    print(card.text)
-    print(card.extra)
+    #Images handling
+    for name, val in card.optionals.items():
+        card.optionals[name] = val.replace("img src=\"", "img src=\"" + user_config['images_dir'])
+        if user_config['debug']:
+            card.get_images(user_config['default_img'])
+
+
+    print(card)
     print()
 
 
@@ -178,6 +132,13 @@ for i, card in enumerate(cards):
     out.write("<li>")
     out.write(card.extra)
     out.write("</li>")
+
+    if card.has_optionals():
+        for name, val in card.optionals.items():
+            out.write("<li>")
+            out.write(val)
+            out.write("</li>")
+
     out.write("</ul>")
     out.write("</li>")
 
@@ -190,4 +151,4 @@ out.close()
 
 
 output = pypandoc.convert_file(source_file='outhtml.html', format='html', to='docx',
-                               outputfile=config['out_dir'], extra_args=['-RTS'])
+                               outputfile=user_config['out_dir'], extra_args=['-RTS'])
