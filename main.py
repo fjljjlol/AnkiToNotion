@@ -54,58 +54,56 @@ for card in cards:
         isFirst = False
 
 
-    if card.extra == "":
-        continue
+    if card.extra != "":
+        # only image checking
+        card.perform_only_image_detection(TextType.EXTRA)
 
-    # only image checking
-    card.perform_only_image_detection(TextType.EXTRA)
+        card.extra = "<div>" + card.extra + "</div>"
 
-    card.extra = "<div>" + card.extra + "</div>"
+        #Images handling
+        card.extra = card.extra.replace("img src=\"", "img src=\"" + user_config['images_dir'])
+        if user_config['debug']:
+            card.get_images(user_config['default_img'])
 
-    #Images handling
-    card.extra = card.extra.replace("img src=\"", "img src=\"" + user_config['images_dir'])
-    if user_config['debug']:
-        card.get_images(user_config['default_img'])
-
-    # if not user_config['debug']:
-    #     card.extra = card.extra.replace("img src=\"", "img src=\"" + user_config['images_dir'])
-    # else:
-    #     # card.extra = card.extra.replace("img src=\"","")
-    #     card.extra = card.extra.replace("img src=\"", "img src=\"" + user_config['images_dir'])
-    #     card.get_images(user_config['default_img'])
-    res = [i for i in range(len(card.extra)) if card.extra.startswith("src=", i)]
-    spans = [i for i in range(len(card.extra)) if card.extra.startswith("<span", i)]
-
-    while (len(spans) > 0):
-        for s in spans:
-            p1 = card.extra[0:s]
-            p2 = card.extra[s + 1:]
-            p2 = p2[p2.index(">") + 1:].replace("</span>", "", 1)
-
-            card.extra = p1 + p2
-            break
+        # if not user_config['debug']:
+        #     card.extra = card.extra.replace("img src=\"", "img src=\"" + user_config['images_dir'])
+        # else:
+        #     # card.extra = card.extra.replace("img src=\"","")
+        #     card.extra = card.extra.replace("img src=\"", "img src=\"" + user_config['images_dir'])
+        #     card.get_images(user_config['default_img'])
+        res = [i for i in range(len(card.extra)) if card.extra.startswith("src=", i)]
         spans = [i for i in range(len(card.extra)) if card.extra.startswith("<span", i)]
 
-    card.extra = card.extra.replace(" \"<", " &quot;<")
+        while (len(spans) > 0):
+            for s in spans:
+                p1 = card.extra[0:s]
+                p2 = card.extra[s + 1:]
+                p2 = p2[p2.index(">") + 1:].replace("</span>", "", 1)
 
-    if card.extra.find("<b style=\"font-style: italic; \">") != -1:
-        card.extra = card.extra.replace("</b><i>", "")
-        card.extra = card.extra.replace("</i><b style=\"font-style: italic; \">", "")
-        card.extra = card.extra.replace("<b style=\"font-style: italic; \">", "michaelferrara")
+                card.extra = p1 + p2
+                break
+            spans = [i for i in range(len(card.extra)) if card.extra.startswith("<span", i)]
 
-        index = card.extra.find("michaelferrara")
-        p2 = card.extra[index:].replace("</b>", "", 1)
-        p1 = card.extra[:index]
+        card.extra = card.extra.replace(" \"<", " &quot;<")
 
-        # print(p1)
-        # print(p2)
-        card.extra = p1 + p2
-        card.extra = card.extra.replace("michaelferrara", "")
+        if card.extra.find("<b style=\"font-style: italic; \">") != -1:
+            card.extra = card.extra.replace("</b><i>", "")
+            card.extra = card.extra.replace("</i><b style=\"font-style: italic; \">", "")
+            card.extra = card.extra.replace("<b style=\"font-style: italic; \">", "michaelferrara")
 
-    card.do_extra_special()
+            index = card.extra.find("michaelferrara")
+            p2 = card.extra[index:].replace("</b>", "", 1)
+            p1 = card.extra[:index]
+
+            # print(p1)
+            # print(p2)
+            card.extra = p1 + p2
+            card.extra = card.extra.replace("michaelferrara", "")
+
+        card.do_extra_special()
 
 
-    # ----------------Extra Pruning----------------
+    # ----------------Optional Pruning----------------
     # only image checking
     card.perform_only_image_detection(TextType.OPTIONAL)
 
@@ -116,9 +114,13 @@ for card in cards:
             card.get_images(user_config['default_img'])
 
 
+    # print(card.text)
+    # print()
+
+
+for card in cards:
     print(card)
     print()
-
 
 
 out = open("outhtml.html", "w")
