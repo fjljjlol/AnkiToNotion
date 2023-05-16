@@ -43,6 +43,11 @@ for card in cards:
     # only image checking
     card.perform_only_image_detection(TextType.TEXT)
 
+    # Images handling
+    card.text = card.text.replace("img src=\"", "img src=\"" + user_config['images_dir'])
+    if user_config['debug']:
+        card.get_images(user_config['default_img'])
+
     #----------------Extra Pruning----------------
     if isFirst:
         clone = card.extra
@@ -105,7 +110,7 @@ for card in cards:
 
     # ----------------Optional Pruning----------------
     # only image checking
-    card.perform_only_image_detection(TextType.OPTIONAL)
+    card.perform_only_image_detection(TextType.OPTIONAL, True)
 
     #Images handling
     for name, val in card.optionals.items():
@@ -118,9 +123,9 @@ for card in cards:
     # print()
 
 
-for card in cards:
-    print(card)
-    print()
+# for card in cards:
+#     print(card)
+#     print()
 
 
 out = open("outhtml.html", "w")

@@ -107,14 +107,16 @@ class Card:
                 self.__get_images_helper(default, val)
 
 
-    @staticmethod
-    def does_contain_only_images(text:str):
+    def does_contain_only_images(self, text:str, debug: bool = False):
         text = text.replace("<br />", "")
         text = text.replace("<br/>", "")
         text = text.replace("<br>", "")
         text = text.replace("<i>", "")
         text = text.replace("</i>", "")
 
+        if debug:
+            print(text)
+            print()
 
         if text[0:4] == "<img" or text[0:4] == "<br " or text[0:4] == " <im" or text[0:3] == "<b>" or text[
                                                                                                           0:3] == "<u>":
@@ -129,20 +131,33 @@ class Card:
             text = text.replace("</b>", "")
             text = text.replace("</span>", "")
 
+            while text.find("<ahref") != -1:
+                text = text[text.find(">") + 1:]
+                text = text[text.find(">") + 1:]
+
+            while text.find("<a href") != -1:
+                text = text[text.find(">") + 1:]
+                text = text[text.find(">") + 1:]
+
+
+            print("inside")
+            print(text)
+            print()
+
             return len(text) == 0
 
         return False
 
-    def perform_only_image_detection(self, ttype: TextType = TextType.ALL):
+    def perform_only_image_detection(self, ttype: TextType = TextType.ALL, debug: bool = False):
         if ttype == TextType.TEXT or ttype==TextType.ALL:
-            if self.does_contain_only_images(self.text):
+            if self.does_contain_only_images(self.text, debug):
                 self.text = "Text <br>" + self.text
         if ttype == TextType.EXTRA or ttype==TextType.ALL:
-            if self.does_contain_only_images(self.extra):
+            if self.does_contain_only_images(self.extra, debug):
                 self.extra = "Extra <br>" + self.extra
         if ttype== TextType.OPTIONAL or ttype==TextType.ALL:
             for name, optional in self.optionals.items():
-                if self.does_contain_only_images(optional):
+                if self.does_contain_only_images(optional, debug):
                     self.optionals[name] = name + " <br>" + optional
 
 
