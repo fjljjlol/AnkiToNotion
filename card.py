@@ -115,7 +115,7 @@ class Card:
         text = text.replace("</i>", "")
 
         if debug:
-            print(text)
+            # print(text)
             print()
 
         if text[0:4] == "<img" or text[0:4] == "<br " or text[0:4] == " <im" or text[0:3] == "<b>" or text[
@@ -139,10 +139,10 @@ class Card:
                 text = text[text.find(">") + 1:]
                 text = text[text.find(">") + 1:]
 
-
-            print("inside")
-            print(text)
-            print()
+            if debug:
+                # print("inside")
+                print(text)
+                print()
 
             return len(text) == 0
 
@@ -192,6 +192,9 @@ class Card:
         for cloz in reversed(clozures):
             self.text = self.text.replace("cumclozuregoesherelol", cloz.text, 1)
 
+    """
+    Also just removes underlined things
+    """
     def initial_pruning(self):
         self.replace("\"\"", "\"")
 
@@ -218,6 +221,8 @@ class Card:
 
         self.replace("<div>", "")
         self.replace("</div>", "")
+        self.replace("<u>", "")
+        self.replace("</u>", "")
 
 
 def get_cards(file: str, optionals: [] = None) -> []:

@@ -48,6 +48,9 @@ for card in cards:
     if user_config['debug']:
         card.get_images(user_config['default_img'])
 
+
+    # print(card.text)
+
     #----------------Extra Pruning----------------
     if isFirst:
         clone = card.extra
@@ -121,6 +124,7 @@ for card in cards:
 
     # print(card.text)
     # print()
+
 
 
 # for card in cards:
