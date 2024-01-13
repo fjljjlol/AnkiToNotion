@@ -221,8 +221,15 @@ class Card:
 
         self.replace("<div>", "")
         self.replace("</div>", "")
-        self.replace("<u>", "")
-        self.replace("</u>", "")
+        if "<u>" in self.text:
+            self.replace("<u>", "")
+            self.replace("</u>", "")
+            self.text=self.text.replace(" ","&nbsp;")
+            self.text = self.text.replace("<br&nbsp;/>", "<br />")
+        self.replace("</i> ", "</i>&nbsp;")
+        self.replace(" <i>", "&nbsp;<i>")
+        self.replace("</b> ", "</b>&nbsp;")
+        self.replace(" <b>", "&nbsp;<b>")
 
 
 def get_cards(file: str, optionals: [] = None) -> []:
